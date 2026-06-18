@@ -6,10 +6,12 @@ import joblib
 # CONFIGURACIÓN
 # ==================================
 st.set_page_config(
-    page_title="Sistema Inteligente de Predicción",
+    page_title="Prueba",
     layout="wide"
 )
-st.error("APP VERSION FINAL")
+
+st.title("APP FUNCIONANDO")
+st.success("Version de prueba")
 # ==================================
 # MENÚ
 # ==================================
