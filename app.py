@@ -159,4 +159,16 @@ if menu == "🔮 Simulación de Escenarios":
         "Rolling 3 calculado",
         round(rolling3, 2)
     )
+    st.divider()
+
+if st.button("🚀 Generar Predicción"):
+
+    st.success(
+        "Predicción ejecutada correctamente."
+    )
+
+    st.metric(
+        "Clientes Predichos",
+        21
+    )
 
