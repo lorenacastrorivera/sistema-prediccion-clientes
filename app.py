@@ -9,7 +9,6 @@ st.set_page_config(
     page_title="Sistema Inteligente de Predicción",
     layout="wide"
 )
-st.error("🚨 VERSION NUEVA APP.PY")
 # ==================================
 # MENÚ
 # ==================================
