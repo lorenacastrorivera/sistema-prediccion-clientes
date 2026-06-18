@@ -165,10 +165,10 @@ if menu == "🔮 Simulación":
 
     if st.button("🚀 Generar Predicción"):
 
-    st.success(
-        "Botón funcionando correctamente"
-    )
+       st.success(
+            "Botón funcionando correctamente"
+       )
 
-    st.write(
-        "Próxima etapa: carga del modelo Bayesiano"
-    )
+       st.write(
+          "Próxima etapa: carga del modelo Bayesiano"
+       )
