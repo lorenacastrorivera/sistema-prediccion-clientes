@@ -34,7 +34,7 @@ if menu == "🏠 Inicio":
     st.markdown("""
     ### Investigación
 
-    Técnicas de aprendizaje supervisado para predecir el crecimiento de clientes.
+    Técnicas de aprendizaje supervisado para predecir el crecimiento de clientes de televisión por paga.
 
     ### Aplicabilidad
 
@@ -45,18 +45,22 @@ if menu == "🏠 Inicio":
     - Empresas de energía eléctrica
     - Empresas de internet
     - Otros servicios
+
+    ### Modelo seleccionado
+
+    Regresión Lineal Bayesiana
     """)
 
     st.divider()
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric("Observaciones", "184")
-    col2.metric("Modelos", "7")
+    col1.metric("Observaciones", "42")
+    col2.metric("Modelos Evaluados", "7")
     col3.metric("Mejor Modelo", "Bayesiana")
 
     st.success(
-        "Aplicación funcionando correctamente."
+        "Sistema desarrollado para consumir modelos predictivos de crecimiento de clientes."
     )
 
 # ==================================
@@ -75,7 +79,7 @@ elif menu == "📊 Resultados":
         use_container_width=True
     )
 
-    st.subheader("Ranking por R²")
+    st.subheader("Ranking de Modelos según R²")
 
     df_graf = df.sort_values(
         by="R2_Promedio",
@@ -96,7 +100,7 @@ elif menu == "🔮 Simulación":
     st.title("🔮 Simulación de Escenarios")
 
     st.info(
-        "Simulación de variables comerciales para estimar el crecimiento de clientes."
+        "Ingrese valores comerciales e históricos para estimar el crecimiento de clientes."
     )
 
     st.subheader("Variables comerciales")
@@ -140,24 +144,24 @@ elif menu == "🔮 Simulación":
     st.subheader("Historial reciente")
 
     lag1 = st.number_input(
-        "Clientes semana anterior",
+        "Clientes periodo anterior",
         value=20
     )
 
     lag3 = st.number_input(
-        "Clientes hace 3 semanas",
+        "Clientes hace 3 periodos",
         value=18
     )
 
     lag6 = st.number_input(
-        "Clientes hace 6 semanas",
+        "Clientes hace 6 periodos",
         value=15
     )
 
     rolling3 = (lag1 + lag3 + lag6) / 3
 
     st.metric(
-        "Rolling 3 calculado",
+        "Promedio móvil (Rolling 3)",
         round(rolling3, 2)
     )
 
@@ -184,12 +188,19 @@ elif menu == "🔮 Simulación":
         prediccion = modelo.predict(entrada)[0]
 
         st.success(
-            "Predicción ejecutada correctamente."
+            "Predicción generada correctamente utilizando el modelo de Regresión Lineal Bayesiana."
         )
 
         st.metric(
             "Clientes Predichos",
-            round(prediccion, 0)
+            int(round(prediccion))
         )
 
+        st.info(
+            "El resultado representa la cantidad estimada de nuevos clientes para el siguiente periodo."
+        )
+
+        st.write(
+            "**Modelo utilizado:** Regresión Lineal Bayesiana"
+        )
     
