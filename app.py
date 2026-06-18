@@ -1,6 +1,8 @@
 import streamlit as st
 import streamlit as st
 import pandas as pd
+import pandas as pd
+import joblib
 # ==================================
 # CONFIGURACIÓN
 # ==================================
@@ -163,11 +165,10 @@ if menu == "🔮 Simulación":
 
     if st.button("🚀 Generar Predicción"):
 
-        st.success(
-            "Predicción ejecutada correctamente."
-        )
+    st.success(
+        "Botón funcionando correctamente"
+    )
 
-        st.metric(
-            "Clientes Predichos",
-            21
-        )
+    st.write(
+        "Próxima etapa: carga del modelo Bayesiano"
+    )
