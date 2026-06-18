@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+import joblib
 # ==================================
 # CONFIGURACIÓN
 # ==================================
@@ -163,10 +163,82 @@ if menu == "🔮 Simulación":
 
     if st.button("🚀 Generar Predicción"):
 
-       st.success(
-            "Botón funcionando correctamente"
+    modelo = joblib.load(
+        "modelo_regresion_lineal_bayesiana_multiple.pkl"
+    )
+
+    entrada = pd.DataFrame({
+        "DECOS_PROM": [decos],
+        "MENSUALIDAD_PROM": [mensualidad],
+        "PROGRAMACION_MAS_FRECUENTE": [programacion],
+        "MOD_PAGO_MAS_FRECUENTE": [mod_pago],
+        "ESTADO_CUENTA_MAS_FRECUENTE": [estado],
+        "CLIENTES_LAG1": [lag1],
+        "CLIENTES_LAG3": [lag3],
+        "CLIENTES_LAG6": [lag6],
+        "CLIENTES_ROLLING3": [rolling3]
+    })
+
+    prediccion = modelo.predict(entrada)[0]
+
+    st.success("Predicción ejecutada correctamente")
+
+    st.metric(
+        "Clientes Predichos",
+        round(prediccion, 0)
+    )
+    if st.button("🚀 Generar Predicción"):
+
+    modelo = joblib.load(
+        "modelo_regresion_lineal_bayesiana_multiple.pkl"
+    )
+
+    entrada = pd.DataFrame({
+        "DECOS_PROM": [decos],
+        "MENSUALIDAD_PROM": [mensualidad],
+        "PROGRAMACION_MAS_FRECUENTE": [programacion],
+        "MOD_PAGO_MAS_FRECUENTE": [mod_pago],
+        "ESTADO_CUENTA_MAS_FRECUENTE": [estado],
+        "CLIENTES_LAG1": [lag1],
+        "CLIENTES_LAG3": [lag3],
+        "CLIENTES_LAG6": [lag6],
+        "CLIENTES_ROLLING3": [rolling3]
+    })
+
+    prediccion = modelo.predict(entrada)[0]
+
+    st.success("Predicción ejecutada correctamente")
+
+    st.metric(
+        "Clientes Predichos",
+        round(prediccion, 0)
+    )
+    if st.button("🚀 Generar Predicción"):
+
+       modelo = joblib.load(
+           "modelo_regresion_lineal_bayesiana_multiple.pkl"
        )
 
-       st.write(
-          "Próxima etapa: carga del modelo Bayesiano"
-       )
+       entrada = pd.DataFrame({
+          "DECOS_PROM": [decos],
+          "MENSUALIDAD_PROM": [mensualidad],
+          "PROGRAMACION_MAS_FRECUENTE": [programacion],
+          "MOD_PAGO_MAS_FRECUENTE": [mod_pago],
+          "ESTADO_CUENTA_MAS_FRECUENTE": [estado],
+          "CLIENTES_LAG1": [lag1],
+          "CLIENTES_LAG3": [lag3],
+          "CLIENTES_LAG6": [lag6],
+          "CLIENTES_ROLLING3": [rolling3]
+       })
+
+       prediccion = modelo.predict(entrada)[0]
+
+       st.success("Predicción ejecutada correctamente")
+
+       st.metric(
+          "Clientes Predichos",
+            round(prediccion, 0)
+        )
+
+
+    
