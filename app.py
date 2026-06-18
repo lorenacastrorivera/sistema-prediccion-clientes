@@ -86,3 +86,88 @@ if menu == "📊 Resultados":
         x="Modelo",
         y="R2_Promedio"
     )
+# ==================================
+# SIMULACIÓN
+# ==================================
+if menu == "🔮 Simulación":
+
+    st.title("🔮 Simulación de Escenarios")
+
+    st.info(
+        "Simulación de variables comerciales para estimar el crecimiento de clientes."
+    )
+
+    st.subheader("Variables comerciales")
+
+    decos = st.number_input(
+        "Decodificadores promedio",
+        value=2.0
+    )
+
+    mensualidad = st.number_input(
+        "Mensualidad promedio",
+        value=140.0
+    )
+
+    programacion = st.selectbox(
+        "Programación",
+        [
+            "BRONCE HD",
+            "PLATA HD",
+            "ORO HD"
+        ]
+    )
+
+    mod_pago = st.selectbox(
+        "Modalidad de pago",
+        [
+            "EFECTIVO",
+            "TC"
+        ]
+    )
+
+    estado = st.selectbox(
+        "Estado de cuenta",
+        [
+            "NORMAL",
+            "FIRST REMINDER",
+            "COLLECTION"
+        ]
+    )
+
+    st.subheader("Historial reciente")
+
+    lag1 = st.number_input(
+        "Clientes semana anterior",
+        value=20
+    )
+
+    lag3 = st.number_input(
+        "Clientes hace 3 semanas",
+        value=18
+    )
+
+    lag6 = st.number_input(
+        "Clientes hace 6 semanas",
+        value=15
+    )
+
+    rolling3 = (lag1 + lag3 + lag6) / 3
+
+    st.metric(
+        "Rolling 3 calculado",
+        round(rolling3, 2)
+    )
+
+    st.divider()
+
+    if st.button("🚀 Generar Predicción"):
+
+        st.success(
+            "Predicción ejecutada correctamente."
+        )
+
+        st.metric(
+            "Clientes Predichos",
+            21
+        )
