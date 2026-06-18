@@ -163,9 +163,9 @@ if menu == "🔮 Simulación de Escenarios":
 
     if st.button("🚀 Generar Predicción"):
 
-       modelo = joblib.load(
-       "modelo_regresion_lineal_bayesiana_multiple.pkl"
-       )
+      # modelo = joblib.load(
+      # "modelo_regresion_lineal_bayesiana_multiple.pkl"
+      # )
 
        entrada = pd.DataFrame({
        "DECOS_PROM": [decos],
@@ -179,7 +179,7 @@ if menu == "🔮 Simulación de Escenarios":
        "CLIENTES_ROLLING3": [rolling3]
        })
 
-       prediccion = modelo.predict(entrada)[0]
+       #prediccion = modelo.predict(entrada)[0]
 
        st.success("Predicción ejecutada correctamente.")
 
