@@ -164,27 +164,27 @@ if menu == "🔮 Simulación de Escenarios":
 
     if st.button("🚀 Generar Predicción"):
 
-       # modelo = joblib.load(
-       #     "modelo_regresion_lineal_bayesiana_multiple.pkl"
-       # )
+        # modelo = joblib.load(
+        #     "modelo_regresion_lineal_bayesiana_multiple.pkl"
+        # )
 
-       entrada = pd.DataFrame({
-        "DECOS_PROM": [decos],
-        "MENSUALIDAD_PROM": [mensualidad],
-        "PROGRAMACION_MAS_FRECUENTE": [programacion],
-        "MOD_PAGO_MAS_FRECUENTE": [mod_pago],
-        "ESTADO_CUENTA_MAS_FRECUENTE": [estado],
-        "CLIENTES_LAG1": [lag1],
-        "CLIENTES_LAG3": [lag3],
-        "CLIENTES_LAG6": [lag6],
-        "CLIENTES_ROLLING3": [rolling3]
-      })
+        entrada = pd.DataFrame({
+         "DECOS_PROM": [decos],
+         "MENSUALIDAD_PROM": [mensualidad],
+         "PROGRAMACION_MAS_FRECUENTE": [programacion],
+         "MOD_PAGO_MAS_FRECUENTE": [mod_pago],
+         "ESTADO_CUENTA_MAS_FRECUENTE": [estado],
+         "CLIENTES_LAG1": [lag1],
+         "CLIENTES_LAG3": [lag3],
+         "CLIENTES_LAG6": [lag6],
+         "CLIENTES_ROLLING3": [rolling3]
+        })
 
-      # prediccion = modelo.predict(entrada)[0]
+        # prediccion = modelo.predict(entrada)[0]
 
-      st.success("Predicción ejecutada correctamente.")
+        st.success("Predicción ejecutada correctamente.")
 
-      st.metric(
-        "Clientes Predichos",
-        21
-       )
+        st.metric(
+         "Clientes Predichos",
+         21
+        )
