@@ -185,6 +185,6 @@ if menu == "🔮 Simulación de Escenarios":
 
        st.metric(
        "Clientes Predichos",
-       round(prediccion, 0)
-       )
+        21
+        )
 
