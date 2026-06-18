@@ -1,5 +1,6 @@
 import streamlit as st
-
+import streamlit as st
+import pandas as pd
 # ==================================
 # CONFIGURACIÓN
 # ==================================
@@ -62,13 +63,26 @@ if menu == "🏠 Inicio":
 # ==================================
 if menu == "📊 Resultados":
 
-    st.title("📊 Resultados")
-    st.info("Página en construcción")
+    st.title("📊 Resultados de los Modelos")
 
-# ==================================
-# SIMULACIÓN
-# ==================================
-if menu == "🔮 Simulación":
+    df = pd.read_excel(
+        "resultados_timeseriessplit.xlsx"
+    )
 
-    st.title("🔮 Simulación")
-    st.info("Página en construcción")
+    st.dataframe(
+        df,
+        use_container_width=True
+    )
+
+    st.subheader("Ranking por R²")
+
+    df_graf = df.sort_values(
+        by="R2_Promedio",
+        ascending=False
+    )
+
+    st.bar_chart(
+        data=df_graf,
+        x="Modelo",
+        y="R2_Promedio"
+    )
