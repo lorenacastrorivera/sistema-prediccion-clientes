@@ -1,6 +1,2 @@
 streamlit
-pandas
-numpy
-joblib
-openpyxl
-scikit-learn==1.6.1
+
