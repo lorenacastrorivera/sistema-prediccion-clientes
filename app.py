@@ -55,7 +55,7 @@ if menu == "🏠 Inicio":
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric("Observaciones", "42")
+    col1.metric("Observaciones", "190")
     col2.metric("Modelos Evaluados", "7")
     col3.metric("Mejor Modelo", "Bayesiana")
 
