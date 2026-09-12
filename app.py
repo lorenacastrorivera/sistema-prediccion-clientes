@@ -2,17 +2,19 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# ==================================
+# ============================================================
 # CONFIGURACIÓN
-# ==================================
+# ============================================================
+
 st.set_page_config(
     page_title="Sistema Inteligente de Predicción",
     layout="wide"
 )
 
-# ==================================
+# ============================================================
 # MENÚ
-# ==================================
+# ============================================================
+
 menu = st.radio(
     "Seleccione una opción",
     [
@@ -22,9 +24,10 @@ menu = st.radio(
     ]
 )
 
-# ==================================
+# ============================================================
 # INICIO
-# ==================================
+# ============================================================
+
 if menu == "🏠 Inicio":
 
     st.title(
@@ -34,7 +37,8 @@ if menu == "🏠 Inicio":
     st.markdown("""
     ### Investigación
 
-    Técnicas de aprendizaje supervisado para predecir el crecimiento de clientes de televisión por paga.
+    Técnicas de aprendizaje supervisado para predecir el crecimiento
+    de clientes de televisión por paga.
 
     ### Aplicabilidad
 
@@ -57,27 +61,40 @@ if menu == "🏠 Inicio":
 
     col1.metric("Observaciones", "184")
     col2.metric("Modelos Evaluados", "7")
-    col3.metric("Mejor Modelo", "Bayesiana")
+    col3.metric("Mejor Modelo", "Regresión Lineal Bayesiana")
 
     st.success(
-        "Sistema desarrollado para consumir modelos predictivos de crecimiento de clientes."
+        "Sistema desarrollado para consumir modelos predictivos "
+        "de crecimiento de clientes."
     )
 
-# ==================================
+
+# ============================================================
 # RESULTADOS
-# ==================================
+# ============================================================
+
 elif menu == "📊 Resultados":
 
     st.title("📊 Resultados de los Modelos")
 
+    # --------------------------------------------------------
+    # Cargar resultados definitivos
+    # --------------------------------------------------------
+
     df = pd.read_excel(
-        "resultados_timeseriessplit.xlsx"
+        "resultados_kfold_sin_leakage_definitivo.xlsx"
     )
 
     st.dataframe(
         df,
         use_container_width=True
     )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # Ranking según R²
+    # --------------------------------------------------------
 
     st.subheader("Ranking de Modelos según R²")
 
@@ -92,28 +109,79 @@ elif menu == "📊 Resultados":
         y="R2_Promedio"
     )
 
-# ==================================
+    # --------------------------------------------------------
+    # Ranking según MSE
+    # --------------------------------------------------------
+
+    st.subheader("Ranking de Modelos según MSE")
+
+    df_mse = df.sort_values(
+        by="MSE_Promedio",
+        ascending=True
+    )
+
+    st.bar_chart(
+        data=df_mse,
+        x="Modelo",
+        y="MSE_Promedio"
+    )
+
+    # --------------------------------------------------------
+    # Ranking según MAE
+    # --------------------------------------------------------
+
+    st.subheader("Ranking de Modelos según MAE")
+
+    df_mae = df.sort_values(
+        by="MAE_Promedio",
+        ascending=True
+    )
+
+    st.bar_chart(
+        data=df_mae,
+        x="Modelo",
+        y="MAE_Promedio"
+    )
+
+
+# ============================================================
 # SIMULACIÓN
-# ==================================
+# ============================================================
+
 elif menu == "🔮 Simulación":
 
     st.title("🔮 Simulación de Escenarios")
 
     st.info(
-        "Ingrese valores comerciales e históricos para estimar el crecimiento de clientes."
+        "Ingrese valores comerciales e históricos para estimar "
+        "la cantidad de nuevos clientes del siguiente periodo."
     )
 
-    st.subheader("Variables comerciales")
+    # ========================================================
+    # VARIABLES COMERCIALES
+    # ========================================================
 
-    decos = st.number_input(
-        "Decodificadores promedio",
-        value=2.0
-    )
+    st.subheader("📋 Variables comerciales")
 
-    mensualidad = st.number_input(
-        "Mensualidad promedio",
-        value=140.0
-    )
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        decos = st.number_input(
+            "Decodificadores promedio",
+            min_value=0.0,
+            value=2.0,
+            step=0.1
+        )
+
+    with col2:
+
+        mensualidad = st.number_input(
+            "Mensualidad promedio",
+            min_value=0.0,
+            value=140.0,
+            step=1.0
+        )
 
     programacion = st.selectbox(
         "Programación",
@@ -141,66 +209,145 @@ elif menu == "🔮 Simulación":
         ]
     )
 
-    st.subheader("Historial reciente")
+    # ========================================================
+    # HISTORIAL
+    # ========================================================
 
-    lag1 = st.number_input(
-        "Clientes periodo anterior",
-        value=20
-    )
+    st.subheader("📈 Historial reciente")
 
-    lag3 = st.number_input(
-        "Clientes hace 3 periodos",
-        value=18
-    )
+    col1, col2 = st.columns(2)
 
-    lag6 = st.number_input(
-        "Clientes hace 6 periodos",
-        value=15
-    )
+    with col1:
 
-    rolling3 = (lag1 + lag3 + lag6) / 3
+        lag1 = st.number_input(
+            "Clientes en la observación anterior",
+            min_value=0,
+            value=20,
+            step=1
+        )
 
-    st.metric(
-        "Promedio móvil (Rolling 3)",
-        round(rolling3, 2)
-    )
+        lag2 = st.number_input(
+            "Clientes en la segunda observación anterior",
+            min_value=0,
+            value=19,
+            step=1
+        )
+
+        lag3 = st.number_input(
+            "Clientes en la tercera observación anterior",
+            min_value=0,
+            value=18,
+            step=1
+        )
+
+    with col2:
+
+        lag6 = st.number_input(
+            "Clientes en la sexta observación anterior",
+            min_value=0,
+            value=15,
+            step=1
+        )
+
+        # Rolling 3 correcto
+        rolling3 = (lag1 + lag2 + lag3) / 3
+
+        st.metric(
+            "Promedio móvil (Rolling 3)",
+            round(rolling3, 2)
+        )
 
     st.divider()
 
-    if st.button("🚀 Generar Predicción"):
+    # ========================================================
+    # PREDICCIÓN
+    # ========================================================
 
-        modelo = joblib.load(
-            "modelo_regresion_lineal_bayesiana_multiple.pkl"
-        )
+    if st.button(
+        "🚀 Generar Predicción",
+        use_container_width=True
+    ):
 
-        entrada = pd.DataFrame({
-            "DECOS_PROM": [decos],
-            "MENSUALIDAD_PROM": [mensualidad],
-            "PROGRAMACION_MAS_FRECUENTE": [programacion],
-            "MOD_PAGO_MAS_FRECUENTE": [mod_pago],
-            "ESTADO_CUENTA_MAS_FRECUENTE": [estado],
-            "CLIENTES_LAG1": [lag1],
-            "CLIENTES_LAG3": [lag3],
-            "CLIENTES_LAG6": [lag6],
-            "CLIENTES_ROLLING3": [rolling3]
-        })
+        try:
 
-        prediccion = modelo.predict(entrada)[0]
+            # ------------------------------------------------
+            # Cargar modelo definitivo
+            # ------------------------------------------------
 
-        st.success(
-            "Predicción generada correctamente utilizando el modelo de Regresión Lineal Bayesiana."
-        )
+            modelo = joblib.load(
+                "modelo_regresion_lineal_bayesiana.pkl"
+            )
 
-        st.metric(
-            "Clientes Predichos",
-            int(round(prediccion))
-        )
+            # ------------------------------------------------
+            # Crear entrada
+            # ------------------------------------------------
 
-        st.info(
-            "El resultado representa la cantidad estimada de nuevos clientes para el siguiente periodo."
-        )
+            entrada = pd.DataFrame({
 
-        st.write(
-            "**Modelo utilizado:** Regresión Lineal Bayesiana"
-        )
-    
+                "DECOS_PROM_LAG1": [decos],
+
+                "MENSUALIDAD_PROM_LAG1": [mensualidad],
+
+                "PROGRAMACION_MAS_FRECUENTE_LAG1": [
+                    programacion
+                ],
+
+                "MOD_PAGO_MAS_FRECUENTE_LAG1": [
+                    mod_pago
+                ],
+
+                "ESTADO_CUENTA_MAS_FRECUENTE_LAG1": [
+                    estado
+                ],
+
+                "CLIENTES_LAG1": [lag1],
+
+                "CLIENTES_LAG3": [lag3],
+
+                "CLIENTES_LAG6": [lag6],
+
+                "CLIENTES_ROLLING3": [rolling3]
+            })
+
+            # ------------------------------------------------
+            # Generar predicción
+            # ------------------------------------------------
+
+            prediccion = modelo.predict(entrada)[0]
+
+            # Evitar resultados negativos
+            prediccion_final = max(
+                0,
+                int(round(prediccion))
+            )
+
+            # ------------------------------------------------
+            # Mostrar resultado
+            # ------------------------------------------------
+
+            st.success(
+                "Predicción generada correctamente."
+            )
+
+            st.metric(
+                "👥 Clientes Predichos",
+                prediccion_final
+            )
+
+            st.info(
+                "El resultado representa la cantidad estimada "
+                "de nuevos clientes para el siguiente periodo."
+            )
+
+            st.write(
+                "**Modelo utilizado:** "
+                "Regresión Lineal Bayesiana"
+            )
+
+        except Exception as e:
+
+            st.error(
+                "Ocurrió un error al generar la predicción."
+            )
+
+            st.exception(e)
