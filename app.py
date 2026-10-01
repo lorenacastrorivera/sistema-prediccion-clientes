@@ -82,7 +82,6 @@ if menu == "🏠 Inicio":
         "de crecimiento de clientes."
     )
 
-
 # ============================================================
 # RESULTADOS
 # ============================================================
@@ -99,7 +98,7 @@ elif menu == "📊 Resultados":
         "resultados_kfold_definitivos_186_observaciones.xlsx"
     )
 
-    # Limpiar nombres de columnas
+    # Limpiar espacios en nombres de columnas
     df.columns = (
         df.columns
         .astype(str)
@@ -117,10 +116,10 @@ elif menu == "📊 Resultados":
     # --------------------------------------------------------
 
     columnas_requeridas = [
-        "Modelo",
-        "R2_Promedio",
-        "MSE_Promedio",
-        "MAE_Promedio"
+        "MODELO",
+        "R2_PROMEDIO",
+        "MSE_PROMEDIO",
+        "MAE_PROMEDIO"
     ]
 
     columnas_faltantes = [
@@ -147,48 +146,45 @@ elif menu == "📊 Resultados":
         st.stop()
 
     # --------------------------------------------------------
-    # IDENTIFICAR MEJORES MODELOS
+    # IDENTIFICAR RESULTADOS DESTACADOS
     # --------------------------------------------------------
 
     mejor_r2 = df.loc[
-        df["R2_Promedio"].idxmax()
+        df["R2_PROMEDIO"].idxmax()
     ]
 
     mejor_mse = df.loc[
-        df["MSE_Promedio"].idxmin()
+        df["MSE_PROMEDIO"].idxmin()
     ]
 
     mejor_mae = df.loc[
-        df["MAE_Promedio"].idxmin()
+        df["MAE_PROMEDIO"].idxmin()
     ]
 
     # --------------------------------------------------------
     # RESUMEN
     # --------------------------------------------------------
 
-    st.subheader("🏆 Resumen del desempeño")
+    st.subheader("📊 Resumen del desempeño")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-
         st.metric(
             "Mayor R²",
-            mejor_r2["Modelo"]
+            mejor_r2["MODELO"]
         )
 
     with col2:
-
         st.metric(
             "Menor MSE",
-            mejor_mse["Modelo"]
+            mejor_mse["MODELO"]
         )
 
     with col3:
-
         st.metric(
             "Menor MAE",
-            mejor_mae["Modelo"]
+            mejor_mae["MODELO"]
         )
 
     st.info(
@@ -208,14 +204,14 @@ elif menu == "📊 Resultados":
     )
 
     df_graf = df.sort_values(
-        by="R2_Promedio",
+        by="R2_PROMEDIO",
         ascending=False
     )
 
     st.bar_chart(
         data=df_graf,
-        x="Modelo",
-        y="R2_Promedio"
+        x="MODELO",
+        y="R2_PROMEDIO"
     )
 
     # --------------------------------------------------------
@@ -227,14 +223,14 @@ elif menu == "📊 Resultados":
     )
 
     df_mse = df.sort_values(
-        by="MSE_Promedio",
+        by="MSE_PROMEDIO",
         ascending=True
     )
 
     st.bar_chart(
         data=df_mse,
-        x="Modelo",
-        y="MSE_Promedio"
+        x="MODELO",
+        y="MSE_PROMEDIO"
     )
 
     # --------------------------------------------------------
@@ -246,15 +242,16 @@ elif menu == "📊 Resultados":
     )
 
     df_mae = df.sort_values(
-        by="MAE_Promedio",
+        by="MAE_PROMEDIO",
         ascending=True
     )
 
     st.bar_chart(
         data=df_mae,
-        x="Modelo",
-        y="MAE_Promedio"
+        x="MODELO",
+        y="MAE_PROMEDIO"
     )
+
 
 # ============================================================
 # SIMULACIÓN
