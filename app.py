@@ -99,12 +99,52 @@ elif menu == "📊 Resultados":
         "resultados_kfold_definitivos_186_observaciones.xlsx"
     )
 
+    # Limpiar nombres de columnas
+    df.columns = (
+        df.columns
+        .astype(str)
+        .str.strip()
+    )
+
+    # Mostrar tabla
     st.dataframe(
         df,
         use_container_width=True
     )
 
-    st.divider()
+    # --------------------------------------------------------
+    # Verificar columnas requeridas
+    # --------------------------------------------------------
+
+    columnas_requeridas = [
+        "Modelo",
+        "R2_Promedio",
+        "MSE_Promedio",
+        "MAE_Promedio"
+    ]
+
+    columnas_faltantes = [
+        columna
+        for columna in columnas_requeridas
+        if columna not in df.columns
+    ]
+
+    if columnas_faltantes:
+
+        st.error(
+            "El archivo de resultados no contiene las columnas "
+            "esperadas."
+        )
+
+        st.write(
+            "Columnas encontradas en el archivo:"
+        )
+
+        st.write(
+            df.columns.tolist()
+        )
+
+        st.stop()
 
     # --------------------------------------------------------
     # IDENTIFICAR MEJORES MODELOS
@@ -160,7 +200,7 @@ elif menu == "📊 Resultados":
     st.divider()
 
     # --------------------------------------------------------
-    # Ranking según R²
+    # COMPARACIÓN SEGÚN R²
     # --------------------------------------------------------
 
     st.subheader(
@@ -179,7 +219,7 @@ elif menu == "📊 Resultados":
     )
 
     # --------------------------------------------------------
-    # Ranking según MSE
+    # COMPARACIÓN SEGÚN MSE
     # --------------------------------------------------------
 
     st.subheader(
@@ -198,7 +238,7 @@ elif menu == "📊 Resultados":
     )
 
     # --------------------------------------------------------
-    # Ranking según MAE
+    # COMPARACIÓN SEGÚN MAE
     # --------------------------------------------------------
 
     st.subheader(
@@ -215,7 +255,6 @@ elif menu == "📊 Resultados":
         x="Modelo",
         y="MAE_Promedio"
     )
-
 
 # ============================================================
 # SIMULACIÓN
