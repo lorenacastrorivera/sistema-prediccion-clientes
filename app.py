@@ -395,7 +395,7 @@ elif menu == "🔮 Simulación":
             # ------------------------------------------------
 
             modelo = joblib.load(
-                "modelo_regresion_lineal_bayesiana_multiple.pkl"
+                "modelo_regresion_lineal_bayesiana.pkl"
             )
 
 
