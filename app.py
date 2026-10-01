@@ -476,7 +476,6 @@ if menu == "🏠 Inicio":
         "para realizar la simulación."
     )
 
-
 # ============================================================
 # RESULTADOS
 # ============================================================
@@ -490,11 +489,267 @@ elif menu == "📊 Resultados":
     st.markdown(
         """
         En esta sección se presentan los resultados obtenidos
-        mediante los modelos de aprendizaje supervisado,
-        utilizando validación cruzada K-Fold y
-        validación mediante TimeSeriesSplit.
+        para los siete modelos de aprendizaje supervisado,
+        utilizando los procedimientos de validación empleados
+        en la investigación.
         """
     )
+
+    # ========================================================
+    # FUNCIÓN PARA MOSTRAR RESULTADOS
+    # ========================================================
+
+    def mostrar_resultados_modelos(df, titulo_validacion):
+
+        if df is None or df.empty:
+
+            st.warning(
+                f"No existen resultados disponibles para "
+                f"{titulo_validacion}."
+            )
+
+            return
+
+        st.subheader(
+            f"📋 Resultados - {titulo_validacion}"
+        )
+
+        # ----------------------------------------------------
+        # MOSTRAR TABLA
+        # ----------------------------------------------------
+
+        st.dataframe(
+            df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        st.divider()
+
+        # ----------------------------------------------------
+        # IDENTIFICAR COLUMNAS
+        # ----------------------------------------------------
+
+        columna_modelo = None
+        columna_r2 = None
+        columna_mse = None
+        columna_mae = None
+
+        for columna in df.columns:
+
+            nombre = str(columna).upper()
+
+            if nombre == "MODELO":
+                columna_modelo = columna
+
+            elif "R2" in nombre and "PROM" in nombre:
+                columna_r2 = columna
+
+            elif "MSE" in nombre and "PROM" in nombre:
+                columna_mse = columna
+
+            elif "MAE" in nombre and "PROM" in nombre:
+                columna_mae = columna
+
+        # ----------------------------------------------------
+        # RESUMEN
+        # ----------------------------------------------------
+
+        st.subheader(
+            "📌 Resumen de métricas"
+        )
+
+        resumen_cols = st.columns(3)
+
+        # ----------------------------------------------------
+        # MAYOR R²
+        # ----------------------------------------------------
+
+        if (
+            columna_modelo is not None
+            and columna_r2 is not None
+        ):
+
+            fila_r2 = df.loc[
+                df[columna_r2].idxmax()
+            ]
+
+            with resumen_cols[0]:
+
+                st.metric(
+                    "Mayor R²",
+                    normalizar_nombre_modelo(
+                        fila_r2[columna_modelo]
+                    )
+                )
+
+                st.caption(
+                    f"R² = {fila_r2[columna_r2]:.4f}"
+                )
+
+        # ----------------------------------------------------
+        # MENOR MSE
+        # ----------------------------------------------------
+
+        if (
+            columna_modelo is not None
+            and columna_mse is not None
+        ):
+
+            fila_mse = df.loc[
+                df[columna_mse].idxmin()
+            ]
+
+            with resumen_cols[1]:
+
+                st.metric(
+                    "Menor MSE",
+                    normalizar_nombre_modelo(
+                        fila_mse[columna_modelo]
+                    )
+                )
+
+                st.caption(
+                    f"MSE = {fila_mse[columna_mse]:.4f}"
+                )
+
+        # ----------------------------------------------------
+        # MENOR MAE
+        # ----------------------------------------------------
+
+        if (
+            columna_modelo is not None
+            and columna_mae is not None
+        ):
+
+            fila_mae = df.loc[
+                df[columna_mae].idxmin()
+            ]
+
+            with resumen_cols[2]:
+
+                st.metric(
+                    "Menor MAE",
+                    normalizar_nombre_modelo(
+                        fila_mae[columna_modelo]
+                    )
+                )
+
+                st.caption(
+                    f"MAE = {fila_mae[columna_mae]:.4f}"
+                )
+
+        st.divider()
+
+        # ====================================================
+        # RANKING SEGÚN R²
+        # ====================================================
+
+        if (
+            columna_modelo is not None
+            and columna_r2 is not None
+        ):
+
+            st.subheader(
+                "📈 Ranking de Modelos según R²"
+            )
+
+            df_r2 = df[
+                [
+                    columna_modelo,
+                    columna_r2
+                ]
+            ].copy()
+
+            df_r2["Modelo"] = (
+                df_r2[columna_modelo]
+                .apply(normalizar_nombre_modelo)
+            )
+
+            df_r2 = df_r2.sort_values(
+                by=columna_r2,
+                ascending=False
+            )
+
+            st.bar_chart(
+                df_r2.set_index("Modelo")[columna_r2],
+                use_container_width=True
+            )
+
+        st.divider()
+
+        # ====================================================
+        # RANKING SEGÚN MSE
+        # ====================================================
+
+        if (
+            columna_modelo is not None
+            and columna_mse is not None
+        ):
+
+            st.subheader(
+                "📉 Ranking de Modelos según MSE"
+            )
+
+            df_mse = df[
+                [
+                    columna_modelo,
+                    columna_mse
+                ]
+            ].copy()
+
+            df_mse["Modelo"] = (
+                df_mse[columna_modelo]
+                .apply(normalizar_nombre_modelo)
+            )
+
+            df_mse = df_mse.sort_values(
+                by=columna_mse,
+                ascending=True
+            )
+
+            st.bar_chart(
+                df_mse.set_index("Modelo")[columna_mse],
+                use_container_width=True
+            )
+
+        st.divider()
+
+        # ====================================================
+        # RANKING SEGÚN MAE
+        # ====================================================
+
+        if (
+            columna_modelo is not None
+            and columna_mae is not None
+        ):
+
+            st.subheader(
+                "📉 Ranking de Modelos según MAE"
+            )
+
+            df_mae = df[
+                [
+                    columna_modelo,
+                    columna_mae
+                ]
+            ].copy()
+
+            df_mae["Modelo"] = (
+                df_mae[columna_modelo]
+                .apply(normalizar_nombre_modelo)
+            )
+
+            df_mae = df_mae.sort_values(
+                by=columna_mae,
+                ascending=True
+            )
+
+            st.bar_chart(
+                df_mae.set_index("Modelo")[columna_mae],
+                use_container_width=True
+            )
+
 
     # ========================================================
     # K-FOLD
@@ -509,118 +764,22 @@ elif menu == "📊 Resultados":
     if df_kfold is not None:
 
         st.caption(
-            f"Archivo utilizado: {os.path.basename(archivo_kfold)}"
+            "Archivo de resultados: "
+            + os.path.basename(archivo_kfold)
         )
 
-        st.dataframe(
+        mostrar_resultados_modelos(
             df_kfold,
-            use_container_width=True,
-            hide_index=True
+            "K-Fold"
         )
-
-        st.divider()
-
-        mostrar_resumen_resultados(
-            df_kfold
-        )
-
-        st.divider()
-
-        r2_col, mse_col, mae_col = identificar_columnas(
-            df_kfold
-        )
-
-        if "Modelo" in df_kfold.columns:
-
-            # ------------------------------------------------
-            # R²
-            # ------------------------------------------------
-
-            if r2_col is not None:
-
-                st.subheader(
-                    "📈 Desempeño según R²"
-                )
-
-                df_graf = df_kfold[
-                    ["Modelo", r2_col]
-                ].copy()
-
-                df_graf["Modelo"] = (
-                    df_graf["Modelo"]
-                    .apply(normalizar_nombre_modelo)
-                )
-
-                df_graf = df_graf.sort_values(
-                    by=r2_col,
-                    ascending=False
-                )
-
-                st.bar_chart(
-                    df_graf.set_index("Modelo")[r2_col]
-                )
-
-            # ------------------------------------------------
-            # MSE
-            # ------------------------------------------------
-
-            if mse_col is not None:
-
-                st.subheader(
-                    "📉 Desempeño según MSE"
-                )
-
-                df_mse = df_kfold[
-                    ["Modelo", mse_col]
-                ].copy()
-
-                df_mse["Modelo"] = (
-                    df_mse["Modelo"]
-                    .apply(normalizar_nombre_modelo)
-                )
-
-                df_mse = df_mse.sort_values(
-                    by=mse_col,
-                    ascending=True
-                )
-
-                st.bar_chart(
-                    df_mse.set_index("Modelo")[mse_col]
-                )
-
-            # ------------------------------------------------
-            # MAE
-            # ------------------------------------------------
-
-            if mae_col is not None:
-
-                st.subheader(
-                    "📉 Desempeño según MAE"
-                )
-
-                df_mae = df_kfold[
-                    ["Modelo", mae_col]
-                ].copy()
-
-                df_mae["Modelo"] = (
-                    df_mae["Modelo"]
-                    .apply(normalizar_nombre_modelo)
-                )
-
-                df_mae = df_mae.sort_values(
-                    by=mae_col,
-                    ascending=True
-                )
-
-                st.bar_chart(
-                    df_mae.set_index("Modelo")[mae_col]
-                )
 
     else:
 
         st.warning(
-            "No se encontró el archivo de resultados K-Fold."
+            "No se encontró el archivo de resultados "
+            "correspondiente a K-Fold."
         )
+
 
     # ========================================================
     # TIME SERIES SPLIT
@@ -637,28 +796,21 @@ elif menu == "📊 Resultados":
     if df_ts is not None:
 
         st.caption(
-            f"Archivo utilizado: {os.path.basename(archivo_ts)}"
+            "Archivo de resultados: "
+            + os.path.basename(archivo_ts)
         )
 
-        st.dataframe(
+        mostrar_resultados_modelos(
             df_ts,
-            use_container_width=True,
-            hide_index=True
-        )
-
-        st.divider()
-
-        mostrar_resumen_resultados(
-            df_ts
+            "TimeSeriesSplit"
         )
 
     else:
 
         st.warning(
             "No se encontró el archivo de resultados "
-            "TimeSeriesSplit."
+            "correspondiente a TimeSeriesSplit."
         )
-
 
 # ============================================================
 # SIMULACIÓN
